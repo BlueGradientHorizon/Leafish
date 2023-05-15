@@ -355,6 +355,9 @@ fn add_player(renderer: Arc<Renderer>, player_model: &mut PlayerModel) {
     }
 
     let mut head_verts = vec![];
+    // TODO: Cape
+    let mut body_verts = vec![];
+    let mut part_verts = vec![vec![]; 4];
     if player_model.has_head {
         model::append_box(
             &mut head_verts,
@@ -376,86 +379,82 @@ fn add_player(renderer: Arc<Renderer>, player_model: &mut PlayerModel) {
             8.4 / 16.0,
             resolve_textures(&skin, 8.0, 8.0, 8.0, 32.0, 0.0),
         );
-    }
 
-    // TODO: Cape
-    let mut body_verts = vec![];
-    model::append_box(
-        &mut body_verts,
-        -4.0 / 16.0,
-        -6.0 / 16.0,
-        -2.0 / 16.0,
-        8.0 / 16.0,
-        12.0 / 16.0,
-        4.0 / 16.0,
-        resolve_textures(&skin, 8.0, 12.0, 4.0, 16.0, 16.0),
-    );
-    model::append_box(
-        &mut body_verts,
-        -4.2 / 16.0,
-        -6.2 / 16.0,
-        -2.2 / 16.0,
-        8.4 / 16.0,
-        12.4 / 16.0,
-        4.4 / 16.0,
-        resolve_textures(&skin, 8.0, 12.0, 4.0, 16.0, 16.0),
-    );
-
-    let mut part_verts = vec![vec![]; 4];
-
-    for (i, offsets) in [
-        [16.0, 48.0, 0.0, 48.0],  // Left leg
-        [0.0, 16.0, 0.0, 32.0],   // Right Leg
-        [32.0, 48.0, 48.0, 48.0], // Left arm
-        [40.0, 16.0, 40.0, 32.0], // Right arm
-    ]
-    .iter()
-    .enumerate()
-    {
-        // TODO: Fix alex (slim) skins
-        let alex = i > 1;
-        let width = if alex {
-            // arms of alex (slim) skins have 3/4 of the width of normal skins!
-            3.0
-        } else {
-            4.0
-        };
-        let (ox, oy) = (offsets[0], offsets[1]);
         model::append_box(
-            &mut part_verts[i],
+            &mut body_verts,
+            -4.0 / 16.0,
+            -6.0 / 16.0,
             -2.0 / 16.0,
-            -12.0 / 16.0,
-            -2.0 / 16.0,
-            4.0 / 16.0,
+            8.0 / 16.0,
             12.0 / 16.0,
             4.0 / 16.0,
-            [
-                srel!(ox + 8.0, oy + 0.0, 4.0, 4.0),     // Down
-                srel!(ox + 4.0, oy + 0.0, 4.0, 4.0),     // Up
-                srel!(ox + 4.0, oy + 4.0, width, 12.0),  // North
-                srel!(ox + 12.0, oy + 4.0, width, 12.0), // South
-                srel!(ox + 8.0, oy + 4.0, width, 12.0),  // West
-                srel!(ox + 0.0, oy + 4.0, width, 12.0),  // East
-            ],
+            resolve_textures(&skin, 8.0, 12.0, 4.0, 16.0, 16.0),
         );
-        let (ox, oy) = (offsets[2], offsets[3]);
         model::append_box(
-            &mut part_verts[i],
+            &mut body_verts,
+            -4.2 / 16.0,
+            -6.2 / 16.0,
             -2.2 / 16.0,
-            -12.2 / 16.0,
-            -2.2 / 16.0,
-            4.4 / 16.0,
+            8.4 / 16.0,
             12.4 / 16.0,
             4.4 / 16.0,
-            [
-                srel!(ox + 8.0, oy + 0.0, 4.0, 4.0),   // Down
-                srel!(ox + 4.0, oy + 0.0, 4.0, 4.0),   // Up
-                srel!(ox + 4.0, oy + 4.0, 4.0, 12.0),  // North
-                srel!(ox + 12.0, oy + 4.0, 4.0, 12.0), // South
-                srel!(ox + 8.0, oy + 4.0, 4.0, 12.0),  // West
-                srel!(ox + 0.0, oy + 4.0, 4.0, 12.0),  // East
-            ],
+            resolve_textures(&skin, 8.0, 12.0, 4.0, 16.0, 16.0),
         );
+
+        for (i, offsets) in [
+            [16.0, 48.0, 0.0, 48.0],  // Left leg
+            [0.0, 16.0, 0.0, 32.0],   // Right Leg
+            [32.0, 48.0, 48.0, 48.0], // Left arm
+            [40.0, 16.0, 40.0, 32.0], // Right arm
+        ]
+            .iter()
+            .enumerate()
+        {
+            // TODO: Fix alex (slim) skins
+            let alex = i > 1;
+            let width = if alex {
+                // arms of alex (slim) skins have 3/4 of the width of normal skins!
+                3.0
+            } else {
+                4.0
+            };
+            let (ox, oy) = (offsets[0], offsets[1]);
+            model::append_box(
+                &mut part_verts[i],
+                -2.0 / 16.0,
+                -12.0 / 16.0,
+                -2.0 / 16.0,
+                4.0 / 16.0,
+                12.0 / 16.0,
+                4.0 / 16.0,
+                [
+                    srel!(ox + 8.0, oy + 0.0, 4.0, 4.0),     // Down
+                    srel!(ox + 4.0, oy + 0.0, 4.0, 4.0),     // Up
+                    srel!(ox + 4.0, oy + 4.0, width, 12.0),  // North
+                    srel!(ox + 12.0, oy + 4.0, width, 12.0), // South
+                    srel!(ox + 8.0, oy + 4.0, width, 12.0),  // West
+                    srel!(ox + 0.0, oy + 4.0, width, 12.0),  // East
+                ],
+            );
+            let (ox, oy) = (offsets[2], offsets[3]);
+            model::append_box(
+                &mut part_verts[i],
+                -2.2 / 16.0,
+                -12.2 / 16.0,
+                -2.2 / 16.0,
+                4.4 / 16.0,
+                12.4 / 16.0,
+                4.4 / 16.0,
+                [
+                    srel!(ox + 8.0, oy + 0.0, 4.0, 4.0),   // Down
+                    srel!(ox + 4.0, oy + 0.0, 4.0, 4.0),   // Up
+                    srel!(ox + 4.0, oy + 4.0, 4.0, 12.0),  // North
+                    srel!(ox + 12.0, oy + 4.0, 4.0, 12.0), // South
+                    srel!(ox + 8.0, oy + 4.0, 4.0, 12.0),  // West
+                    srel!(ox + 0.0, oy + 4.0, 4.0, 12.0),  // East
+                ],
+            );
+        }
     }
 
     let mut name_verts = vec![];
