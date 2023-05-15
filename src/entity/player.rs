@@ -94,7 +94,7 @@ pub fn create_local(m: &mut Manager) -> Entity {
             Point3::new(-0.3, 0.0, -0.3),
             Point3::new(0.3, 1.8, 0.3),
         )))
-        .insert(PlayerModel::new("", false, false, true))
+        .insert(PlayerModel::new("", false, true))
         .insert(Light::new())
         .insert(Digging::new())
         .insert(MouseButtons::new())
@@ -114,7 +114,7 @@ pub fn create_remote(m: &mut Manager, name: &str) -> Entity {
             Point3::new(-0.3, 0.0, -0.3),
             Point3::new(0.3, 1.8, 0.3),
         )))
-        .insert(PlayerModel::new(name, true, true, false))
+        .insert(PlayerModel::new(name, true, false))
         .insert(Light::new())
         .insert(EntityType::Player);
     entity.id()
@@ -127,7 +127,6 @@ pub struct PlayerModel {
     dirty: bool,
     name: String,
 
-    has_head: bool,
     has_name_tag: bool,
     first_person: bool,
 
@@ -139,14 +138,13 @@ pub struct PlayerModel {
 }
 
 impl PlayerModel {
-    pub fn new(name: &str, has_head: bool, has_name_tag: bool, first_person: bool) -> Self {
+    pub fn new(name: &str, has_name_tag: bool, first_person: bool) -> Self {
         Self {
             model: None,
             skin_url: Arc::new(Mutex::new(None)),
             dirty: false,
             name: name.to_owned(),
 
-            has_head,
             has_name_tag,
             first_person,
 
@@ -358,7 +356,7 @@ fn add_player(renderer: Arc<Renderer>, player_model: &mut PlayerModel) {
     // TODO: Cape
     let mut body_verts = vec![];
     let mut part_verts = vec![vec![]; 4];
-    if player_model.has_head {
+    if !player_model.first_person {
         model::append_box(
             &mut head_verts,
             -4.0 / 16.0,
