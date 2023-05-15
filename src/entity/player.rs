@@ -356,7 +356,7 @@ fn add_player(renderer: Arc<Renderer>, player_model: &mut PlayerModel) {
     // TODO: Cape
     let mut body_verts = vec![];
     let mut part_verts = vec![vec![]; 4];
-    if player_model.first_person {
+    if !player_model.first_person {
         model::append_box(
             &mut head_verts,
             -4.0 / 16.0,
