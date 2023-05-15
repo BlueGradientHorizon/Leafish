@@ -407,8 +407,8 @@ fn add_player(renderer: Arc<Renderer>, player_model: &mut PlayerModel) {
             [32.0, 48.0, 48.0, 48.0], // Left arm
             [40.0, 16.0, 40.0, 32.0], // Right arm
         ]
-            .iter()
-            .enumerate()
+        .iter()
+        .enumerate()
         {
             // TODO: Fix alex (slim) skins
             let alex = i > 1;
